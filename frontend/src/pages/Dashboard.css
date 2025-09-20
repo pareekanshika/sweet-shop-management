@@ -1,0 +1,177 @@
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #ffefba, #ffffff);
+  margin: 0;
+  padding: 0;
+}
+
+.dashboard-container {
+  padding: 20px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-header h1 {
+  color: #ff4d6d;
+}
+
+.logout-btn {
+  background: #ff4d6d;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  background: #ff1a4d;
+}
+
+.search-add-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 20px 0;
+}
+
+.search-box input {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.search-box button {
+  margin-left: 10px;
+  padding: 8px 15px;
+  background: #ff4d6d;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+}
+
+.search-box button:hover {
+  background: #ff1a4d;
+}
+
+.add-btn {
+  background: #ffbb33;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.add-btn:hover {
+  background: #ffaa00;
+}
+
+.sweets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.sweet-card {
+  background: #fff3f3;
+  border-radius: 15px;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sweet-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.sweet-card.low-stock {
+  border: 2px solid #ff4d6d;
+}
+
+.sweet-card h3 {
+  margin-bottom: 10px;
+  color: #ff4d6d;
+}
+
+.category {
+  font-style: italic;
+  color: #555;
+}
+
+.price {
+  font-weight: bold;
+  color: #333;
+}
+
+.quantity {
+  margin-bottom: 10px;
+}
+
+.purchase-btn {
+  background: #33cc33;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 5px;
+}
+
+.purchase-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.admin-btns {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+.update-btn {
+  background: #33b5e5;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.update-btn:hover {
+  background: #0099cc;
+}
+
+.restock-btn {
+  background: #ffbb33;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.restock-btn:hover {
+  background: #ffaa00;
+}
+
+.delete-btn {
+  background: #ff4444;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #cc0000;
+}
