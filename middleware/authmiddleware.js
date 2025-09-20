@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 
-const JWT_SECRET = "mysecretkey123";
+// Use JWT secret from environment variables
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Protect routes
 const protect = async (req, res, next) => {

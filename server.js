@@ -1,3 +1,4 @@
+require('dotenv').config();  // Load .env variables
 const express = require("express");
 const sequelize = require("./config/db");   // ✅ import DB connection
 const cors = require("cors");
@@ -34,10 +35,9 @@ sequelize
   .then(() => {
     console.log("✅ Tables synced");
 
-    const PORT = 5000;
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
-    });
+    const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
   })
   .catch((err) => {
     console.error("❌ Unable to connect to the database:", err);
