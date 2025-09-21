@@ -1,24 +1,27 @@
 import React, { useState } from "react";
+import { login } from "../services/authservice";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./auth.css"; // We'll create this CSS file for styling
+import "./auth.css";
 
 const Login = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ username: "", password: "" });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", formData);
-      navigate("/dashboard", { state: { token: res.data.token, user: { username: formData.username, isAdmin: true } } });
+      const data = await login(username, password);
+
+      // save token and user
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      navigate("/dashboard");
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      console.error("Login error:", err);
+      setMessage(err.response?.data?.message || "Login failed");
     }
   };
 
@@ -26,9 +29,10 @@ const Login = () => {
     <div className="auth-container">
       <div className="auth-card">
         <h2>🍬 Sweet Shop Login</h2>
+        {message && <p style={{ color: "red" }}>{message}</p>}
         <form onSubmit={handleSubmit}>
-          <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
-          <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
+          <input type="text" name="username" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+          <input type="password" name="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
           <button type="submit">Login</button>
         </form>
         <p>

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { register } from "../services/authservice";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import "./auth.css";
 
 const Register = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ username: "", password: "", isAdmin: false });
+  const [message, setMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -15,11 +16,16 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:5000/api/auth/register", formData);
-      alert("Registration successful!");
-      navigate("/login");
+      const data = await register(formData.username, formData.password, formData.isAdmin);
+
+      // save token and user
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      navigate("/dashboard");
     } catch (err) {
-      alert(err.response?.data?.message || "Registration failed");
+      console.error("Register error:", err);
+      setMessage(err.response?.data?.message || "Registration failed");
     }
   };
 
@@ -27,6 +33,7 @@ const Register = () => {
     <div className="auth-container">
       <div className="auth-card">
         <h2>🍬 Sweet Shop Register</h2>
+        {message && <p style={{ color: "red" }}>{message}</p>}
         <form onSubmit={handleSubmit}>
           <input type="text" name="username" placeholder="Username" value={formData.username} onChange={handleChange} required />
           <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />

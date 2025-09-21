@@ -7,9 +7,23 @@ import RestockSweet from "../components/RestockSweet";
 import "./Dashboard.css"; // Make sure this CSS exists
 
 const Dashboard = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const { token, user } = location.state || {};
+  const navigate = useNavigate();       // ← define navigate first
+  const location = useLocation();       // ← define location first
+
+  const locationToken = location.state?.token;
+  const locationUser = location.state?.user;
+
+  const token = locationToken || localStorage.getItem("token");
+  const userFromStorage = localStorage.getItem("user");
+  const user = locationUser || (userFromStorage ? JSON.parse(userFromStorage) : null);
+
+  useEffect(() => {
+    if (!token || !user) {
+      // Not logged in -> redirect to login
+      navigate("/login");
+    }
+  }, [token, user, navigate]);
+
 
   // ---------- Hooks at the top ----------
   const [sweets, setSweets] = useState([]);
@@ -88,46 +102,52 @@ const Dashboard = () => {
       </header>
 
       <div className="search-add-container">
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search sweets..."
-          className="search-input"
-        />
-        <button className="search-btn" onClick={handleSearch}>Search</button>
-        {user.isAdmin && (
-          <button className="add-btn" onClick={() => setShowAdd(true)}>Add Sweet</button>
-        )}
-      </div>
+  <div className="search-box">
+    <input
+      type="text"
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+      placeholder="🔍 Search sweets..."
+      className="search-input"
+    />
+    <button className="search-btn" onClick={handleSearch}>Search</button>
+  </div>
+  {user.isAdmin && (
+    <button className="add-btn" onClick={() => setShowAdd(true)}>+ Add Sweet</button>
+  )}
+</div>
 
-      <div className="sweets-grid">
-        {sweets.length === 0 && <p>No sweets found 🍭</p>}
-        {sweets.map((sweet) => (
-          <div key={sweet.id} className="sweet-card">
-            <h3>{sweet.name}</h3>
-            <p>Category: {sweet.category}</p>
-            <p>Price: ${sweet.price}</p>
-            <p>Quantity: {sweet.quantity}</p>
-            <div className="card-buttons">
-              <button
-                className="purchase-btn"
-                onClick={() => handlePurchase(sweet.id)}
-                disabled={sweet.quantity === 0}
-              >
-                Purchase
-              </button>
-              {user.isAdmin && (
-                <>
-                  <button className="update-btn" onClick={() => { setSelectedSweet(sweet); setShowUpdate(true); }}>Update</button>
-                  <button className="restock-btn" onClick={() => { setSelectedSweet(sweet); setShowRestock(true); }}>Restock</button>
-                  <button className="delete-btn" onClick={() => handleDelete(sweet.id)}>Delete</button>
-                </>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
+<div className="sweets-grid">
+  {sweets.length === 0 && <p>No sweets found 🍭</p>}
+  {sweets.map((sweet) => (
+    <div
+      key={sweet.id}
+      className={`sweet-card ${sweet.quantity < 5 ? "low-stock" : ""}`}
+    >
+      <h3>{sweet.name}</h3>
+      <p className="category">Category: {sweet.category}</p>
+      <p className="price">Price: ${sweet.price}</p>
+      <p className="quantity">Quantity: {sweet.quantity}</p>
+
+      <button
+        className="purchase-btn"
+        onClick={() => handlePurchase(sweet.id)}
+        disabled={sweet.quantity === 0}
+      >
+        Purchase
+      </button>
+
+      {user.isAdmin && (
+        <div className="admin-btns">
+          <button className="update-btn" onClick={() => { setSelectedSweet(sweet); setShowUpdate(true); }}>Update</button>
+          <button className="restock-btn" onClick={() => { setSelectedSweet(sweet); setShowRestock(true); }}>Restock</button>
+          <button className="delete-btn" onClick={() => handleDelete(sweet.id)}>Delete</button>
+        </div>
+      )}
+    </div>
+  ))}
+</div>
+
 
       {showAdd && <AddSweet onClose={() => { setShowAdd(false); fetchSweets(); }} token={token} />}
       {showUpdate && selectedSweet && <UpdateSweet sweet={selectedSweet} onClose={() => { setShowUpdate(false); fetchSweets(); }} token={token} />}
